@@ -1,6 +1,9 @@
 package main
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"github.com/bootmind/figo/pkg/route"
+	"github.com/gofiber/fiber/v2"
+)
 
 func main() {
 	app := fiber.New()
@@ -11,5 +14,6 @@ func main() {
 		})
 	})
 
+	route.Expenses(app)
 	app.Listen(":3000")
 }
