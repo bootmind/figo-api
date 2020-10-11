@@ -13,4 +13,8 @@ func Expenses(app *fiber.App, db *gorm.DB) {
 	}
 	r := app.Group("/expenses")
 	r.Get("/", h.Index)
+	r.Get("/:id", h.Show)
+	r.Post("/", h.Store)
+	r.Put("/:id", h.Update)
+	r.Delete("/:id", h.Destroy)
 }
