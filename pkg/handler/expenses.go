@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/bootmind/figo/pkg/entity"
@@ -93,4 +94,27 @@ func (h ExpenseHandler) Destroy(ctx *fiber.Ctx) error {
 	h.DB.Delete(&expenseDB)
 
 	return ctx.JSON(fiber.Map{"message": "Expense successfully removed"})
+}
+
+// Upload an attachment
+func (h ExpenseHandler) Upload(ctx *fiber.Ctx) error {
+	id, err := strconv.ParseInt(ctx.Params("id"), 10, 64)
+
+	if err != nil {
+		return ctx.Status(422).JSON(fiber.Map{"errors": [1]string{"We were not able to process your expense"}})
+	}
+
+	file, err := ctx.FormFile("attachment")
+
+	if err != nil {
+		return ctx.Status(422).JSON(fiber.Map{"errors": [1]string{"We were not able upload your attachment"}})
+	}
+
+	ctx.SaveFile(file, fmt.Sprintf("./uploads/%s", file.Filename))
+
+	var expenseDB entity.Expense
+	h.DB.First(&expenseDB, id)
+	h.DB.Model(&expenseDB).Update("attachment", file.Filename)
+
+	return ctx.JSON(fiber.Map{"message": "Attachment uploaded successfully"})
 }

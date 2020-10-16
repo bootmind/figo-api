@@ -17,4 +17,5 @@ func Expenses(app *fiber.App, db *gorm.DB) {
 	r.Post("/", h.Store)
 	r.Put("/:id", h.Update)
 	r.Delete("/:id", h.Destroy)
+	r.Post("/:id/upload", h.Upload)
 }
